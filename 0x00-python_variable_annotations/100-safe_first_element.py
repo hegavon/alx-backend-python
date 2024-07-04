@@ -6,7 +6,7 @@ This contains a function that safely retrieves the first element of a list
 from typing import Sequence, Any, Union
 
 
-def safe_first_element(lst: Sequence) -> Union[Any, None]:
+def safe_first_element(lst: Sequence[Any]) -> Union[Any, None]:
     """
     Safely retrieves the first element of a list.
 
