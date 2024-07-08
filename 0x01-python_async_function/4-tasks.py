@@ -2,30 +2,21 @@
 """
 Module 4-tasks
 This module contains a function that spawns task_wait_random n times
-and returns the list of delays in ascending order
+and returns the list of delays in ascending order.
 """
 
 import asyncio
 from typing import List
 
+# Importing task_wait_random from the previous module
 task_wait_random = __import__('3-tasks').task_wait_random
 
 
 async def task_wait_n(n: int, max_delay: int) -> List[float]:
-    '''Spawns tax_wait n times with the specified max_delay and returns the
-    list of all the delays in ascending order without using sort()
+    '''Executes task_wait_random n times and returns sorted wait times.
     '''
-    tasks = []
-    delays = []
-
-    # Create tasks
-    for _ in range(n):
-        task = task_wait_random(max_delay)
-        tasks.append(task)
-
-    # Await tasks and collect results
-    for task in tasks:
-        result = await task
-        delays.append(result)
-
-    return sorted(delays)
+    # Using asyncio.gather to execute task_wait_random(max_delay) n times
+    wait_times = await asyncio.gather(
+        *(task_wait_random(max_delay) for _ in range(n))
+    )
+    return sorted(wait_times)
