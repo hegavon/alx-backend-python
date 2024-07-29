@@ -1,2 +1,5 @@
 0-main.py
 __pycache__/
+client.py
+fixtures.py
+utils.py
