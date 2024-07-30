@@ -3,21 +3,30 @@
 """
 import unittest
 from typing import Dict
-from unittest.mock import MagicMock, Mock, PropertyMock, patch
+from unittest.mock import (
+    MagicMock,
+    Mock,
+    PropertyMock,
+    patch,
+)
 from parameterized import parameterized, parameterized_class
 from requests import HTTPError
-from client import GithubOrgClient
+
+from client import (
+    GithubOrgClient
+)
 from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
     """Tests the `GithubOrgClient` class."""
-
     @parameterized.expand([
         ("google", {'login': "google"}),
         ("abc", {'login': "abc"}),
     ])
-    @patch("client.get_json")
+    @patch(
+        "client.get_json",
+    )
     def test_org(self, org: str, resp: Dict, mocked_fxn: MagicMock) -> None:
         """Tests the `org` method."""
         mocked_fxn.return_value = MagicMock(return_value=resp)
@@ -29,7 +38,10 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self) -> None:
         """Tests the `_public_repos_url` property."""
-        with patch("client.GithubOrgClient.org", new_callable=PropertyMock) as mock_org:
+        with patch(
+                "client.GithubOrgClient.org",
+                new_callable=PropertyMock,
+                ) as mock_org:
             mock_org.return_value = {
                 'repos_url': "https://api.github.com/users/google/repos",
             }
@@ -79,12 +91,17 @@ class TestGithubOrgClient(unittest.TestCase):
             ]
         }
         mock_get_json.return_value = test_payload["repos"]
-        with patch("client.GithubOrgClient._public_repos_url",
-                   new_callable=PropertyMock) as mock_public_repos_url:
+        with patch(
+                "client.GithubOrgClient._public_repos_url",
+                new_callable=PropertyMock,
+                ) as mock_public_repos_url:
             mock_public_repos_url.return_value = test_payload["repos_url"]
             self.assertEqual(
                 GithubOrgClient("google").public_repos(),
-                ["episodes.dart", "kratu"],
+                [
+                    "episodes.dart",
+                    "kratu",
+                ],
             )
             mock_public_repos_url.assert_called_once()
         mock_get_json.assert_called_once()
@@ -96,8 +113,8 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_has_license(self, repo: Dict, key: str, expected: bool) -> None:
         """Tests the `has_license` method."""
         gh_org_client = GithubOrgClient("google")
-        client_has_license = gh_org_client.has_license(repo, key)
-        self.assertEqual(client_has_license, expected)
+        client_has_licence = gh_org_client.has_license(repo, key)
+        self.assertEqual(client_has_licence, expected)
 
 
 @parameterized_class([
@@ -110,7 +127,6 @@ class TestGithubOrgClient(unittest.TestCase):
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Performs integration tests for the `GithubOrgClient` class."""
-
     @classmethod
     def setUpClass(cls) -> None:
         """Sets up class fixtures before running tests."""
@@ -145,7 +161,4 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def tearDownClass(cls) -> None:
         """Removes the class fixtures after running all tests."""
         cls.get_patcher.stop()
-
-
-if __name__ == "__main__":
-    unittest.main()
+        unittest.main()
