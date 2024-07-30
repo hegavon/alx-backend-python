@@ -9,7 +9,7 @@ from unittest.mock import (
     PropertyMock,
     patch,
 )
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized, parameterized_class # type: ignore
 from requests import HTTPError
 
 from client import (
@@ -161,4 +161,3 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def tearDownClass(cls) -> None:
         """Removes the class fixtures after running all tests."""
         cls.get_patcher.stop()
-        unittest.main()
